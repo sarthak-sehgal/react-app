@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import Aux from '../../hoc/Aux.js';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 
 const INGRIDIENT_PRICES = {
     salad: 20,
@@ -30,7 +32,8 @@ class BurgerBuilder extends Component {
             cheese: true,
             meat: true
         },
-        totalPrice: 0
+        totalPrice: 0,
+        purchasing: false
     }
 
     addIngredientHandler = (type) => {
@@ -83,11 +86,21 @@ class BurgerBuilder extends Component {
         }
     }
 
+    purchaseHandler = () => {
+        this.setState({purchasing: true})
+    }
+
     render () {
+        let isOrderDisabled = true;
+        if(this.state.totalPrice>0)
+            isOrderDisabled = false;
         return (
             <Aux>
+                <Modal show={ this.state.purchasing}>
+                    <OrderSummary ingredients={this.state.ingredients}/>
+                </Modal>
                 <Burger ingredients={this.state.ingredients} />
-                <BuildControls price={this.state.totalPrice} addClicked={this.addIngredientHandler} removeClicked={this.removeIngredientHandler} addDisabledState={this.state.addDisabledState} removeDisabledState={this.state.removeDisabledState} />
+                <BuildControls price={this.state.totalPrice} addClicked={this.addIngredientHandler} removeClicked={this.removeIngredientHandler} addDisabledState={this.state.addDisabledState} removeDisabledState={this.state.removeDisabledState} isOrderDisabled={isOrderDisabled} ordered={this.purchaseHandler} />
             </Aux>
         )
     }
