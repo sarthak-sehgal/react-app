@@ -13,12 +13,12 @@ const orderSummary = (props) => {
 
     return (
         <Aux>
-            <h2>Your Order</h2>
-            <h3>Bill: Rs. {props.price}</h3>
+            <h1 style={{textAlign: 'center'}}>Your Order</h1>
             <p>A delicious burger with the following ingredients:</p>
             <ul>
                 {ingredientSummary}
             </ul>
+            <h3>Total bill: Rs. {props.price}</h3>
             <p>Continue to checkout?</p>
             <Button btnType="Success" clicked={props.continuePurchase}>Continue</Button>
             <Button btnType="Danger" clicked={props.cancelPurchase}>Cancel</Button>
