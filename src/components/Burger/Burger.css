@@ -1,11 +1,7 @@
 .burger {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     width: 40%;
     height: 500px;
-    overflow: auto;
+    overflow: scroll;
     margin: auto;
     text-align: center;
     font-size: 1.2em;

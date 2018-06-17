@@ -13,9 +13,10 @@ const buildControls = (props) => {
 
     return (
         <div className={classes.BuildControls}>
+            <p>Current price: Rs. {props.price}</p>
             {controls.map(control => {
                 return (
-                    <BuildControl key={control.type} label={control.label}/>
+                    <BuildControl key={control.type} label={control.label} onAddClick={() => props.addClicked(control.type)} onRemoveClick={() => props.removeClicked(control.type)} isAddDisabled={props.addDisabledState[control.type]} isRemoveDisabled={props.removeDisabledState[control.type]}/>
                 )
             })}
         </div>
