@@ -99,30 +99,39 @@ class BurgerBuilder extends Component {
     }
 
     purchaseContinueHandler = () => {
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer: {
-                name: 'Test',
-                address: {
-                    street: 'TestStreet',
-                    zipCode: 'TestZip',
-                    country: 'TestCountry'
-                },
-                email: 'test@test.com'
-            },
-            delivery: 'Quick'
+        // const order = {
+        //     ingredients: this.state.ingredients,
+        //     price: this.state.totalPrice,
+        //     customer: {
+        //         name: 'Test',
+        //         address: {
+        //             street: 'TestStreet',
+        //             zipCode: 'TestZip',
+        //             country: 'TestCountry'
+        //         },
+        //         email: 'test@test.com'
+        //     },
+        //     delivery: 'Quick'
+        // }
+        // axios.post('/orders.json', order)
+        // .then(response => {
+        //     let ingredients = this.state.ingredients;
+        //     Object.keys(ingredients).map(key => ingredients[key] = 0);
+        //     this.setState({ingredients: ingredients, totalPrice: 0, purchasing: false});
+        //     alert("Order complete!");
+        // })
+        // .catch(error => {
+        //     alert("Oops!" + error);
+        //     this.setState({purchasing: false});
+        // });
+        const queryParams = [];
+        for (let i in this.state.ingredients) {
+            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
         }
-        axios.post('/orders.json', order)
-        .then(response => {
-            let ingredients = this.state.ingredients;
-            Object.keys(ingredients).map(key => ingredients[key] = 0);
-            this.setState({ingredients: ingredients, totalPrice: 0, purchasing: false});
-            alert("Order complete!");
-        })
-        .catch(error => {
-            alert("Oops!" + error);
-            this.setState({purchasing: false});
+        const queryString = queryParams.join('&');
+        this.props.history.push({
+            pathname: '/checkout',
+            search: '?' + queryString
         });
     }
 
@@ -137,7 +146,7 @@ class BurgerBuilder extends Component {
             burger = (
                 <Aux>
                     <Modal show={ this.state.purchasing} modalClosed={this.modalClosed}>
-                    <OrderSummary ingredients={this.state.ingredients} continuePurchase={this.purchaseContinueHandler} cancelPurchase={this.modalClosed} price={this.state.totalPrice} />
+                    <OrderSummary ingredients={this.state.ingredients} cancelPurchase={this.modalClosed} price={this.state.totalPrice} continuePurchase={this.purchaseContinueHandler}/>
                     </Modal>
                     <Burger ingredients={this.state.ingredients} />
                     <BuildControls price={this.state.totalPrice} addClicked={this.addIngredientHandler} removeClicked={this.removeIngredientHandler} addDisabledState={this.state.addDisabledState} removeDisabledState={this.state.removeDisabledState} isOrderDisabled={isOrderDisabled} ordered={this.purchaseHandler} />
