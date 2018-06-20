@@ -14,7 +14,11 @@ class ContactData extends Component {
                 type: type,
                 placeholder: placeholder
             },
-            value: value
+            value: value,
+            validation: {
+                required: true
+            },
+            valid: false
         };
     }
     state = {
@@ -29,35 +33,44 @@ class ContactData extends Component {
                 elementConfig: {
                     options: [{value: 'normal', displayValue: 'Normal'}, {value: 'fast', displayValue: 'Fast'}]
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: false
+                },
+                valid: true
             }
         },
-        loading: false
+        loading: false,
+        formIsValid: false
     }
 
     orderHandler = ( event ) => {
         event.preventDefault();
-        this.setState( { loading: true } );
+        if(!this.state.formIsValid) {
+            alert('Form field(s) empty!');
+        } else {
+            this.setState( { loading: true } );
 
-        // get form data to submit like {name: testName, email: te@st.com}
-        const formData = {};
-        for(let formDataElement in this.state.orderForm) {
-            formData[formDataElement] = this.state.orderForm[formDataElement].value;
-        }
+            // get form data to submit like {name: testName, email: te@st.com}
+            const formData = {};
+            for(let formDataElement in this.state.orderForm) {
+                formData[formDataElement] = this.state.orderForm[formDataElement].value;
+            }
 
-        const order = {
-            ingredients: this.props.ingredients,
-            price: this.props.price,
-            orderData: formData
+            const order = {
+                ingredients: this.props.ingredients,
+                price: this.props.price,
+                orderData: formData
+            }
+            axios.post( '/orders.json', order )
+                .then( response => {
+                    this.setState( { loading: false } );
+                    this.props.history.push('/');
+                } )
+                .catch( error => {
+                    this.setState( { loading: false } );
+                } );
         }
-        axios.post( '/orders.json', order )
-            .then( response => {
-                this.setState( { loading: false } );
-                this.props.history.push('/');
-            } )
-            .catch( error => {
-                this.setState( { loading: false } );
-            } );
     }
 
     inputChangedHandler = (event, inputIdentifier) => {
@@ -66,12 +79,31 @@ class ContactData extends Component {
         }
         // for deep cloning as spread operator doesn't clone nested objects but returns a pointer to it
         // this is done so that the state is not mutated, immutable!
-        const updatedFormElement = updatedOrderForm[inputIdentifier] = {
+        const updatedFormElement = {
             ...updatedOrderForm[inputIdentifier]
         }
         updatedFormElement['value'] = event.target.value;
         updatedOrderForm[inputIdentifier] = updatedFormElement;
-        this.setState({orderForm: updatedOrderForm});
+        
+        // Validation for each input
+        updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+
+        // Validation for the whole form
+        let isFormValid = true;
+        for (let input in updatedOrderForm)
+        {
+            isFormValid = isFormValid && updatedOrderForm[input]['valid'];
+        }
+
+        this.setState({orderForm: updatedOrderForm, formIsValid: isFormValid});
+    }
+
+    checkValidity = (value, rules) => {
+        let isValid = true;
+        if(rules.required) {
+            isValid = value.trim() !== '';
+        }
+        return isValid;
     }
 
     render () {
@@ -95,11 +127,11 @@ class ContactData extends Component {
             <form onSubmit={this.orderHandler}>
                 {inputElements}
                 {/* no need for clicked as we are using onSubmit*/}
-                <Button btnType="Success">ORDER</Button>
+                <Button btnType="Success" disabled={!this.state.formIsValid}>ORDER</Button>
             </form>
         );
         if ( this.state.loading ) {
-            form = <div>Loading...</div>;
+            form = <div>Ordering...</div>;
         }
         return (
             <div className={classes.ContactData}>
