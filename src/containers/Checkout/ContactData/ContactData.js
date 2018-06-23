@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import axios from '../../../axios-orders';
+import {connect} from 'react-redux';
 
 import Button from '../../../components/UI/Button/Button';
 import Input from '../../../components/UI/Input/Input';
-
 import classes from './ContactData.css';
-import axios from '../../../axios-orders';
+import {ORDER_COMPLETE} from '../../../store/actions';
 
 class ContactData extends Component {
     setOrderForm (elementType, type, placeholder, value) {
@@ -65,6 +66,7 @@ class ContactData extends Component {
             axios.post( '/orders.json', order )
                 .then( response => {
                     this.setState( { loading: false } );
+                    this.props.onOrderComplete();
                     this.props.history.push('/');
                 } )
                 .catch( error => {
@@ -142,4 +144,17 @@ class ContactData extends Component {
     }
 }
 
-export default ContactData;
+const mapStateToProps = state => {
+    return {
+        ingredients: state.ingredients,
+        price: state.totalPrice
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onOrderComplete: () => dispatch({type: ORDER_COMPLETE})
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactData);

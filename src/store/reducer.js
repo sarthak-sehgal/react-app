@@ -29,14 +29,24 @@ const reducer = (state = initialState, action) => {
                 totalPrice: state.totalPrice + INGRIDIENT_PRICES[action.ingredient]
             }
         case (actionTypes.REMOVE_INGREDIENT):
-        return {
-            ...state,
-            ingredients: {
-                ...state.ingredients,
-                [action.ingredient]: state.ingredients[action.ingredient] - 1
-            },
-            totalPrice: state.totalPrice - INGRIDIENT_PRICES[action.ingredient]
-        }
+            return {
+                ...state,
+                ingredients: {
+                    ...state.ingredients,
+                    [action.ingredient]: state.ingredients[action.ingredient] - 1
+                },
+                totalPrice: state.totalPrice - INGRIDIENT_PRICES[action.ingredient]
+            }
+        case (actionTypes.ORDER_COMPLETE):
+            let updatedIngredients = {...state.ingredients};
+            for (let ing in updatedIngredients) {
+                updatedIngredients[ing] = 0
+            }
+            return {
+                ...state,
+                ingredients: updatedIngredients,
+                totalPrice: 0
+            }
         default:
             return state;
     }
