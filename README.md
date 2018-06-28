@@ -1,5 +1,5 @@
 # Disclaimer: Work In Progress
-[Burger Builder](https://github.com/sarthak-sehgal/react-app/blob/master/burgerbuilder.png)
+![Burger Builder](https://github.com/sarthak-sehgal/react-app/blob/master/burgerbuilder.png)
 ---
 ## Introduction
 This is a burger builder application made using React, React Redux and Firebase.
