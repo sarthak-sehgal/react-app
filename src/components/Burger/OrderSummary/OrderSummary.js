@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 import Aux from '../../../hoc/Aux';
 import Button from '../../UI/Button/Button';
@@ -27,4 +27,10 @@ const orderSummary = (props) => {
     );
 }
 
-export default orderSummary;
+const mapStateToProps = state => {
+    return {
+        price: state.totalPrice
+    }
+}
+
+export default connect(mapStateToProps)(orderSummary);
