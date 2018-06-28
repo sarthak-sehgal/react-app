@@ -1,4 +1,5 @@
 # Disclaimer: Work In Progress
+[Burger Builder](https://github.com/sarthak-sehgal/react-app/blob/master/burgerbuilder.png)
 ---
 ## Introduction
 This is a burger builder application made using React, React Redux and Firebase.
@@ -10,7 +11,12 @@ This is a burger builder application made using React, React Redux and Firebase.
 ## Setup:
 ### Clone the repository
 ```
-git clone https://github.com/sarthak-sehgal/react-app/edit/master/README.md
+git clone https://github.com/sarthak-sehgal/react-app/
+```
+
+### Go to the app directory
+```
+cd react-app
 ```
 
 ### Install dependencies
